@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_scripts %}
+    <script type="text/javascript" src="{% static 'js/game_sequence.js' %}" defer></script>
+{% endblock %}
+{% block content_title %}Game Sequence #{{ sequence.id }}{% endblock %}
+{% block content %}
+    <div class="container jumbotron">
+        <div class="d-flex justify-content-center">
+            <p id="current-number" class="h1 fw-bold">{{ sequence.values.first }}</p>
+        </div>
+        <br>
+        <br>
+        <div class="d-flex justify-content-between">
+            <button id="pass-btn" class="btn btn-warning">Pass</button>
+            <button id="accept-btn" class="btn btn-success">Accept</button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer_scripts %}
+    {% include 'save_context_vars.html' with json_object=sequence.as_json object_name='sequence' %}
+    {% include 'save_context_vars.html' with json_object=player.as_json object_name='player' %}
+{% endblock %}

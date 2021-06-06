@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content_title %}Player Registration{% endblock %}
+{% block content %}
+    {% if player_id is None %}
+        <form method="POST" class="form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+        </form>
+    {% else %}
+        <p>You already registered as {{ player_id }}</p>
+        <a class="btn btn-primary" href="{% url 'game' %}">To Game</a>
+    {% endif %}
+{% endblock %}

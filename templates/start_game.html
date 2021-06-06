@@ -4,5 +4,5 @@
     <h1>Thanks for subscribing</h1>
     <br>
     <p>id:{{ player.id }}, age:{{ player.age }}, gender:{{ player.gender }}</p>
-    <button class="btn btn-primary" href="/game">continue to game</button>
+    <a class="btn btn-primary" href="{% url "game" %}">continue to game</a>
 {% endblock %}

@@ -19,6 +19,9 @@ from django.urls import path
 from stop_problem import views as app_views
 
 urlpatterns = [
-    path('', app_views.index),
+    path('', app_views.PlayerRegistrationView.as_view(), name='player-registration'),
+    path('start-game/', app_views.StartGameView.as_view(), name='start-game'),
+    path('game/', app_views.GameSequenceView.as_view(), name='game'),
+    path('thanks-for-playing/', app_views.ThanksForPlayingView.as_view(), name='thanks-for-playing'),
     path('admin/', admin.site.urls),
 ]
