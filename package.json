@@ -4,6 +4,6 @@
     "jquery": "^3.6.0"
   },
   "scripts": {
-  "postinstall": "mv node_modules static"
+  "postinstall": "mv node_modules static && rm -rf node_modules"
 }
 }
