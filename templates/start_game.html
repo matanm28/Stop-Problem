@@ -1,8 +1,60 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <h1>Thanks for subscribing</h1>
-    <br>
-    <p>id:{{ player.id }}, age:{{ player.age }}, gender:{{ player.gender }}</p>
-    <a class="btn btn-primary" href="{% url "game" %}">continue to game</a>
+{% block content_title %}{% endblock %}
+{% block jumbotron_content %}
+    <p class="display-5 text-left"><u>Optimal Stopping</u></p>
+    <figure>
+        <blockquote class="blockquote">
+            <p class="lead m-0 text-justify">
+                In mathematics, the theory of optimal stopping or early stopping is concerned with the problem of
+                choosing a time to take a particular action, in order to maximise an expected reward or minimise an
+                expected cost.
+            </p>
+            <p class="lead m-0">
+                Optimal stopping problems can be found in areas of statistics, economics, and mathematical
+                finance (related to the pricing of American options).
+            </p>
+            <p class="lead mb-4">
+                A key example of an optimal stopping problem is the secretary problem.
+                Optimal stopping problems can often be written in the form of a Bellman equation, and are therefore
+                often solved using dynamic programming.
+            </p>
+            <figcaption class="blockquote-footer text-end">
+                Optimal Stopping from <cite>
+                <a href="https://en.wikipedia.org/wiki/Optimal_stopping" target="_blank" class="link-info">
+                    Wikipedia
+                </a></cite>
+            </figcaption>
+        </blockquote>
+    </figure>
+    <p class="display-5 text-left"><u>About The Experiment</u></p>
+    <p class="lead">You will participate in a game meant to mimic a basic <em><b>Optimal Stopping</b></em> scenario.
+    </p>
+    <p class="lead">In this game you will be presented with a series of sequences, every sequence consists of an
+        undisclosed number of values. For every value a decision needs to be made weather to take the current value
+        or try another one.</p>
+    <p class="lead">Your <em class="text-success"><b>objective</b></em> is to end up with the <em class="text-info"><b>largest
+        sum</b></em> of chosen
+        values.</p>
+    <p class="lead">Some rules to take into consideration:</p>
+    <ul class="lead fs-6">
+        <li>
+            Values which have been passed can't be obtained again.
+        </li>
+        <li>
+            The ordering of each sequence is random, also the amount of values in each sequence is undisclosed.
+        </li>
+        <li>
+            If you reach the last value you will be forced to settle for it.
+        </li>
+    </ul>
+    <p class="lead">Good Luck!</p>
+    <p class="small">This is an experiment conducted as part of our final project for Human-Machine Interaction
+        course at BIU.</p>
+    {% if player is not None %}
+        <p class="collapse">id:{{ player.id }}, age:{{ player.age }}, gender:{{ player.gender }}</p>
+        <a class="btn btn-primary" href="{% url "game-sequence" %}">Continue to game</a>
+    {% else %}
+        <a class="btn btn-primary" href="{% url "player-registration" %}">continue to registration</a>
+    {% endif %}
 {% endblock %}

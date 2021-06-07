@@ -4,3 +4,8 @@
   background-color: #e9ecef;
   border-radius: .3rem;
 }
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

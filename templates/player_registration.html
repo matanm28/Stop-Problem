@@ -1,14 +1,35 @@
 {% extends "base.html" %}
 {% block content_title %}Player Registration{% endblock %}
-{% block content %}
-    {% if player_id is None %}
+{% if player_id is None %}
+    {% block page_scripts %}
+        {% load static %}
+        <script type="text/javascript" src="{% static 'js/player_registration.js' %}"></script>
+    {% endblock %}
+{% endif %}
+{% block jumbotron_content %}
+    {% if player is None %}
         <form method="POST" class="form">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" class="btn btn-primary" value="Submit"/>
         </form>
     {% else %}
-        <p>You already registered as {{ player_id }}</p>
-        <a class="btn btn-primary" href="{% url 'game' %}">To Game</a>
+        <p class="lead">You already <strong>
+            {% if player.is_done %}
+                played
+            {% else %}
+                registered
+            {% endif %}
+        </strong>
+            as <em>{{ player.id }}</em></p>
+        {% if player.is_done %}
+            <p class="small">To start another game you need to <a
+                    href="https://www.leadshook.com/help/how-to-clear-local-storage-in-google-chrome-browser/"
+                    target="_blank" class="link-info">clear your session storage</a>.</p>
+            <a class="btn btn-primary" href="{% url 'thanks-for-playing' %}">See Results</a>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'game-sequence' %}">Continue To Game</a>
+        {% endif %}
+
     {% endif %}
 {% endblock %}

@@ -14,14 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path
 
 from stop_problem import views as app_views
 
 urlpatterns = [
-    path('', app_views.PlayerRegistrationView.as_view(), name='player-registration'),
+    path('', lambda req: redirect('start-game')),
     path('start-game/', app_views.StartGameView.as_view(), name='start-game'),
-    path('game/', app_views.GameSequenceView.as_view(), name='game'),
+    path('player-registration', app_views.PlayerRegistrationView.as_view(), name='player-registration'),
+    path('game-sequence/', app_views.GameSequenceView.as_view(), name='game-sequence'),
     path('thanks-for-playing/', app_views.ThanksForPlayingView.as_view(), name='thanks-for-playing'),
+    path('about/', app_views.AboutView.as_view(), name='about'),
     path('admin/', admin.site.urls),
 ]

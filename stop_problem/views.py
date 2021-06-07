@@ -24,6 +24,8 @@ class MustHavePlayerIdTemplateView(TemplateView):
         context = self.get_context_data(**kwargs)
         if 'player' not in context:
             context['player'] = get_object_or_404(Player, pk=self.request.session['player_id'])
+        if 'redirect' in context:
+            return redirect(context['redirect'])
         return self.render_to_response(context)
 
 
@@ -35,15 +37,12 @@ class PlayerRegistrationView(TemplateView):
             player = Player.objects.filter(id=self.request.session['player_id'])
             if not player.exists():
                 del self.request.session['player_id']
-            else:
-                player = player.first()
-                if player.is_done:
-                    return redirect('thanks-for-playing')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         form = PlayerForm()
-        return {'form': form, 'player_id': self.request.session.get('player_id', None)}
+        player = Player.objects.filter(id=self.request.session.get('player_id', None)).first()
+        return {'form': form, 'player': player}
 
     def post(self, request, *args, **kwargs):
         form = PlayerForm(request.POST)
@@ -51,15 +50,15 @@ class PlayerRegistrationView(TemplateView):
             return render(request, 'player_registration.html', context={'form': form})
         player = form.save()
         request.session['player_id'] = player.id_as_string
-        return redirect('start-game')
+        return redirect('game-sequence')
 
 
-class StartGameView(MustHavePlayerIdTemplateView):
+class StartGameView(TemplateView):
     template_name = 'start_game.html'
 
     def get_context_data(self, **kwargs):
         player_id = self.request.session.get('player_id', None)
-        player = get_object_or_404(Player, id=player_id)
+        player = Player.objects.filter(id=player_id).first()
         return {'player': player}
 
 
@@ -73,7 +72,7 @@ class GameSequenceView(MustHavePlayerIdTemplateView):
         if not sequence_query.exists():
             player.is_done = True
             player.save()
-            return redirect('thanks-for-playing')
+            return {'redirect': 'thanks-for-playing'}
         sequence = sequence_query.first()
         context = {'sequence': sequence}
         return context
@@ -96,9 +95,16 @@ class GameSequenceView(MustHavePlayerIdTemplateView):
             time_period.save()
             answer = Answer.objects.create(value=value, time_period=time_period, sequence_answer=sequence_answer)
             # answer.save()
-        return JsonResponse({'has_next': Sequence.objects.filter(id__gt=sequence.id).exists()})
+        has_next = Sequence.objects.filter(id__gt=sequence.id).exists()
+        if not has_next:
+            player.is_done = True
+            player.save()
+        return JsonResponse({'has_next': has_next})
 
 
 class ThanksForPlayingView(MustHavePlayerIdTemplateView):
     template_name = 'thanks_for_playing.html'
 
+
+class AboutView(TemplateView):
+    template_name = 'about.html'

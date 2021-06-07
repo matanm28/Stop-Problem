@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block page_styling %}
+    <link href="{% static 'css/about.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content_title %}About Us{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="column">
+            <div class="card">
+                <img src="{% static 'assets/matan_malka.jpg' %}" alt="Matan" style="width:100%">
+                <div class="container">
+                    <h2>Matan Malka</h2>
+                    <p class="title">Data Retrieval & Analysis</p>
+                    <ul>
+                        <li>UI/UX design</li>
+                        <li>Database architecture</li>
+                        <li>Data Analysis</li>
+                    </ul>
+                    <p>
+                        <a class="button" href="mailto:matanmkl@gmail.com?Subject=About%20your%20project">Contact</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <img src="{% static 'assets/omer_dimri.jpg' %}" alt="Omer" style="width:100%">
+                <div class="container">
+                    <h2>Omer Dimri</h2>
+                    <p class="title">ML Designer</p>
+                    <ul>
+                        <li>ML model design</li>
+                        <li>Data Analysis</li>
+                    </ul>
+                    <br>
+                    <p>
+                        <a class="button" href="mailto:omerdimri@gmail.com?Subject=About%20your%20project">Contact</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

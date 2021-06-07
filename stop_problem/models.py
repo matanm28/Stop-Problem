@@ -3,6 +3,7 @@ import uuid
 from datetime import timedelta
 
 from django.db import models
+from django.db.models import QuerySet, Avg
 from django.utils.translation import gettext_lazy as _
 
 
@@ -15,7 +16,7 @@ class Player(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     age = models.PositiveSmallIntegerField()
-    gender = models.IntegerField(choices=Gender.choices, default=Gender.RATHER_NOT_SAY)
+    gender = models.IntegerField(choices=Gender.choices, default=Gender.MALE)
     is_done = models.BooleanField(default=False, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -34,7 +35,18 @@ class Player(models.Model):
 
     @property
     def next_seq_id(self) -> int:
-        return self.current_seq.id + 1 if self.current_seq is not None else 1
+        return self.current_seq.id + 1 if self.current_seq is not None else 0
+
+    @property
+    def total_score(self) -> int:
+        total = 0
+        for sequence_id, chosen_index in self.sequence_and_choice:
+            total += Value.objects.get(sequence=sequence_id, index=chosen_index).value
+        return total
+
+    @property
+    def sequence_and_choice(self) -> QuerySet:
+        return self.sequence_answers.values_list('sequence', 'chosen_index')
 
 
 class Sequence(models.Model):
@@ -54,6 +66,32 @@ class Sequence(models.Model):
     @property
     def optimal_index(self) -> int:
         return self.optimal_instance.index
+
+    @property
+    def worst_instance(self) -> 'Value':
+        return self.values.filter(value=models.Min('values__value')).first()
+
+    @property
+    def worst_value(self) -> int:
+        return self.worst_instance.value
+
+    @property
+    def worst_index(self) -> int:
+        return self.worst_instance.index
+
+    @property
+    def median_instances(self) -> QuerySet['Value']:
+        """Because Sequence.values.count() is even than we return two instances"""
+        values_count = self.values.count()
+        return self.values.order_by('value')[values_count // 2:(values_count // 2) + 1]
+
+    @property
+    def median_value(self) -> float:
+        return self.median_instances.aggregate(median_value=Avg('value'))['median_value']
+
+    @property
+    def average_value(self) -> float:
+        return self.values.aggregate(average_value=Avg('value'))['average_value']
 
     @property
     def as_json(self) -> dict:
@@ -110,8 +148,22 @@ class SequenceAnswer(models.Model):
         time_periods = TimePeriod.objects.filter(answers__sequence_answer=self).order_by('start', 'end')
         return time_periods.last().end - time_periods.first().start
 
+    @property
+    def chosen_value(self) -> Value:
+        return Value.objects.get(sequence=self.sequence, index=self.chosen_index)
+
+    @property
+    def chosen_value_other(self):
+        return self.answers.last()
+
+    class Meta:
+        ordering = ['sequence']
+
 
 class Answer(models.Model):
     value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='answers')
     time_period = models.ForeignKey(TimePeriod, on_delete=models.CASCADE, related_name='answers')
     sequence_answer = models.ForeignKey(SequenceAnswer, on_delete=models.CASCADE, related_name='answers')
+
+    class Meta:
+        ordering = ['time_period']
