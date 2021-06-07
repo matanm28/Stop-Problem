@@ -81,8 +81,13 @@ WSGI_APPLICATION = 'StopProblem.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dfnnu10q8dgl74',
+        'HOST': 'ec2-54-216-17-9.eu-west-1.compute.amazonaws.com',
+        'PORT': 5432,
+        'USER':'klhvlmifthowwk',
+        'PASSWORD':'3b84b81a1cc72cee1b156d46cf8d46c76bcd701ca6978c6dccec3149d3504527',
+
     }
 }
 
