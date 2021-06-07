@@ -1,1 +1,1 @@
-web: bin/runsvdir-dyno
+web: gunicorn StopProblem.wsgi --log-file -

@@ -1,2 +1,0 @@
-django: gunicorn StopProblem.wsgi --bind 127.0.0.1:$DJANGO_PORT --log-file -
-node: node server.js
