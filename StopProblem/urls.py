@@ -29,4 +29,4 @@ urlpatterns = [
                   path('thanks-for-playing/', app_views.ThanksForPlayingView.as_view(), name='thanks-for-playing'),
                   path('about/', app_views.AboutView.as_view(), name='about'),
                   path('admin/', admin.site.urls),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+              ]
