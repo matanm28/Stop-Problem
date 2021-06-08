@@ -111,11 +111,6 @@ class Base(Configuration):
 
     STATIC_URL = '/static/'
 
-    # Extra places for collectstatic to find static files.
-    @property
-    def STATICFILES_DIRS(self):
-        return [os.path.join(self.BASE_DIR, 'static'), ]
-
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -128,6 +123,9 @@ class Develop(Base):
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
     ALLOWED_HOSTS = ['127.0.0.1']
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 class Production(Base):
@@ -143,12 +141,11 @@ class Production(Base):
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-    PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
-    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # Extra lookup directories for collectstatic to find static files
-    STATICFILES_DIRS = (
-        os.path.join(PROJECT_ROOT, 'static'),
-    )
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
 
     #  Add configuration for static files storage using whitenoise
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
