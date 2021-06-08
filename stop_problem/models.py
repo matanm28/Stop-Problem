@@ -41,13 +41,13 @@ class Player(models.Model):
     @property
     def total_score(self) -> int:
         total = 0
-        for sequence_id, chosen_index in self.sequence_and_choice:
-            total += Value.objects.get(sequence=sequence_id, index=chosen_index).value
+        for sequence_answer in self.sequence_answers.distinct().all():
+            total += sequence_answer.chosen_value.value
         return total
 
     @property
     def sequence_and_choice(self) -> QuerySet:
-        return self.sequence_answers.values_list('sequence', 'chosen_index')
+        return self.sequence_answers.values_list('sequence', 'chosen_index').distinct()
 
     def __str__(self):
         return f'{self.id}'
