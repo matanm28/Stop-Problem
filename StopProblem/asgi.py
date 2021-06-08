@@ -12,6 +12,7 @@ import os
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StopProblem.settings')
-os.environ.setdefault('DJANGO_CONFIGURATION', 'Production')
+os.environ.setdefault('DJANGO_CONFIGURATION', 'Develop')
+print(os.environ.get('DJANGO_CONFIGURATION'))
 
 application = get_asgi_application()
