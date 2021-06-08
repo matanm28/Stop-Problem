@@ -135,8 +135,7 @@ class Production(Base):
                      'http://stop-problem.herokuapp.com/',
                      'stop-problem.herokuapp.com/',
                      'stop-problem.herokuapp.com']
-    MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware']
-    MIDDLEWARE.extend(Base.MIDDLEWARE)
+    MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware', *Base.MIDDLEWARE]
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
