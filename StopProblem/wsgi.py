@@ -13,6 +13,5 @@ from configurations.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StopProblem.settings')
 os.environ.setdefault('DJANGO_CONFIGURATION', 'Develop')
-print(os.environ.get('DJANGO_CONFIGURATION'))
 
 application = get_wsgi_application()

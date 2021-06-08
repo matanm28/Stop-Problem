@@ -16,6 +16,8 @@ from configurations import Configuration
 
 
 class Base(Configuration):
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-7=qqlq%as8iv(46kkos4(#!_u7_yt0t3pv=emv!@i0iv@pe#!j'
 
@@ -43,24 +45,22 @@ class Base(Configuration):
     ]
     ROOT_URLCONF = 'StopProblem.urls'
 
-    @property
-    def TEMPLATES(self):
-        return [
-            {
-                'BACKEND': 'django.template.backends.django.DjangoTemplates',
-                'DIRS': [os.path.join(self.BASE_DIR, 'templates')]
-                ,
-                'APP_DIRS': True,
-                'OPTIONS': {
-                    'context_processors': [
-                        'django.template.context_processors.debug',
-                        'django.template.context_processors.request',
-                        'django.contrib.auth.context_processors.auth',
-                        'django.contrib.messages.context_processors.messages',
-                    ],
-                },
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [os.path.join(BASE_DIR, 'templates')]
+            ,
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
             },
-        ]
+        },
+    ]
 
     WSGI_APPLICATION = 'StopProblem.wsgi.application'
 
@@ -111,6 +111,10 @@ class Base(Configuration):
 
     STATIC_URL = '/static/'
 
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+    ]
+
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -118,14 +122,9 @@ class Base(Configuration):
 
 
 class Develop(Base):
-    # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    BASE_DIR = Path(__file__).resolve().parent.parent
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
     ALLOWED_HOSTS = ['127.0.0.1']
-
-    # Extra places for collectstatic to find static files.
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 
 class Production(Base):
@@ -135,7 +134,25 @@ class Production(Base):
     ALLOWED_HOSTS = ['https://stop-problem.herokuapp.com/',
                      'http://stop-problem.herokuapp.com/',
                      'stop-problem.herokuapp.com/',
-                     'stop-problem.herokuapp.com']
+                     'stop-problem.herokuapp.com',
+                     '127.0.0.1']
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [os.path.join(BASE_DIR, 'templates')]
+            ,
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
+
     MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware', *Base.MIDDLEWARE]
 
     # Static files (CSS, JavaScript, Images)

@@ -8,7 +8,6 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'StopProblem.settings')
     os.environ.setdefault('DJANGO_CONFIGURATION', 'Develop')
-    print(os.environ.get('DJANGO_CONFIGURATION'))
 
     from configurations.management import execute_from_command_line
 
