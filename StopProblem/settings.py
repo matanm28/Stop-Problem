@@ -151,4 +151,4 @@ class Production(Base):
     )
 
     #  Add configuration for static files storage using whitenoise
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
