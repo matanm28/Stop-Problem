@@ -1,6 +1,7 @@
 import json
 import uuid
 from datetime import timedelta
+from typing import Union, Tuple
 
 from django.db import models
 from django.db.models import QuerySet, Avg
@@ -48,6 +49,9 @@ class Player(models.Model):
     def sequence_and_choice(self) -> QuerySet:
         return self.sequence_answers.values_list('sequence', 'chosen_index')
 
+    def __str__(self):
+        return f'{self.id}'
+
 
 class Sequence(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -57,7 +61,7 @@ class Sequence(models.Model):
 
     @property
     def optimal_instance(self) -> 'Value':
-        return self.values.filter(value=models.Max('values__value')).first()
+        return self.values.order_by('-value').first()
 
     @property
     def optimal_value(self) -> int:
@@ -69,7 +73,7 @@ class Sequence(models.Model):
 
     @property
     def worst_instance(self) -> 'Value':
-        return self.values.filter(value=models.Min('values__value')).first()
+        return self.values.order_by('value').first()
 
     @property
     def worst_value(self) -> int:
@@ -83,11 +87,22 @@ class Sequence(models.Model):
     def median_instances(self) -> QuerySet['Value']:
         """Because Sequence.values.count() is even than we return two instances"""
         values_count = self.values.count()
-        return self.values.order_by('value')[values_count // 2:(values_count // 2) + 1]
+        start = (values_count // 2)
+        end = (values_count // 2) + 1
+        if values_count % 2 == 0:
+            start -= 1
+        return self.values.order_by('value')[start:end]
 
     @property
     def median_value(self) -> float:
         return self.median_instances.aggregate(median_value=Avg('value'))['median_value']
+
+    @property
+    def median_indexes(self) -> Union[int, Tuple[int, int]]:
+        qs = self.median_instances.values_list('index', flat=True)
+        if qs.count() == 1:
+            return qs[0]
+        return tuple(qs)
 
     @property
     def average_value(self) -> float:
@@ -97,6 +112,9 @@ class Sequence(models.Model):
     def as_json(self) -> dict:
         from stop_problem.serializers import SequenceSerializer
         return json.loads(json.dumps(SequenceSerializer(self).data))
+
+    def __str__(self):
+        return f'Sequence #{self.id}: {", ".join([str(val) for val in self.values.values_list("value", flat=True)])}'
 
 
 class Value(models.Model):

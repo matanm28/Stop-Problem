@@ -5,6 +5,7 @@ bs4==0.0.1
 colorama==0.4.4
 decorator==5.0.9
 Django==3.2.4
+django-configurations==2.2
 django-crispy-forms==1.11.2
 django-rest-framework==0.1.0
 djangorestframework==3.12.4
@@ -19,6 +20,7 @@ prompt-toolkit==3.0.18
 psycopg2==2.8.6
 Pygments==2.9.0
 pytz==2021.1
+six==1.16.0
 soupsieve==2.2.1
 sqlparse==0.4.1
 traitlets==5.0.5
