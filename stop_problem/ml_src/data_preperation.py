@@ -63,6 +63,10 @@ def get_inputs_from_player(player: Player) -> ndarray:
     return np.array(data_matrix)
 
 
+def get_data_for_all_players():
+    return {player.id: get_inputs_from_player(player) for player in Player.objects.filter(is_done=True)}
+
+
 def main():
     p = Player.objects.get(id='56835389-432d-403d-a15d-b4f86eed8a24')
     a = get_inputs_from_player(p)
