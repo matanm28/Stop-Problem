@@ -25,7 +25,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
 @admin.register(Sequence)
 class SequenceAdmin(admin.ModelAdmin):
-    list_display = ['id', 'optimal_value', 'optimal_index', 'worst_value', 'worst_index', 'median_value', 'median_indexes',
+    list_display = ['id', 'optimal_value', 'optimal_index', 'worst_value', 'worst_index', 'median_value', 'median_indices',
                     'average_value']
     ordering = ['id']
 
@@ -50,8 +50,8 @@ class SequenceAdmin(admin.ModelAdmin):
         return obj.median_value
 
     @admin.display(description='Median Index')
-    def median_value(self, obj: Sequence):
-        return obj.median_indexes
+    def median_indices(self, obj: Sequence):
+        return obj.median_indices
 
     @admin.display(description='Average Value')
     def average_value(self, obj: Sequence):

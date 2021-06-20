@@ -98,7 +98,7 @@ class Sequence(models.Model):
         return self.median_instances.aggregate(median_value=Avg('value'))['median_value']
 
     @property
-    def median_indexes(self) -> Union[int, Tuple[int, int]]:
+    def median_indices(self) -> Union[int, Tuple[int, int]]:
         qs = self.median_instances.values_list('index', flat=True)
         if qs.count() == 1:
             return qs[0]
