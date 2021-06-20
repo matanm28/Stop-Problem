@@ -63,6 +63,17 @@ def get_inputs_from_player(player: Player) -> ndarray:
     return np.array(data_matrix)
 
 
+def get_data_for_10_players():
+    i = 0
+    players_dict = {}
+    for player in Player.objects.filter(is_done=True):
+        i += 1
+        if i == 10:
+            return players_dict
+        players_dict[player.id] = get_inputs_from_player(player)
+    return players_dict
+
+
 def get_data_for_all_players():
     return {player.id: get_inputs_from_player(player) for player in Player.objects.filter(is_done=True)}
 

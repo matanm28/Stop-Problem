@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from stop_problem.machine_learning import main
+from stop_problem.ml_src.model_utils import main
 
 
 def Command():
