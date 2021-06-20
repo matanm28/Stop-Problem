@@ -80,7 +80,6 @@ class GameSequenceView(MustHavePlayerIdTemplateView):
     def post(self, request, *args, **kwargs):
         data = request.POST
         time_stamps = [int(stamp) for stamp in data.getlist('time_stamps[]')]
-        time_periods = []
         player = Player.objects.get(id=data.get('player_id'))
         sequence = Sequence.objects.get(id=data.get('seq_id'))
         chosen_index = data.get('chosen_index')
@@ -94,7 +93,6 @@ class GameSequenceView(MustHavePlayerIdTemplateView):
             time_period = TimePeriod.objects.create(start=start, end=end)
             time_period.save()
             answer = Answer.objects.create(value=value, time_period=time_period, sequence_answer=sequence_answer)
-            # answer.save()
         has_next = Sequence.objects.filter(id__gt=sequence.id).exists()
         if not has_next:
             player.is_done = True
