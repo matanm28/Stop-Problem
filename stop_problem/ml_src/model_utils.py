@@ -73,15 +73,10 @@ class TrainingStopProblemDataset(Dataset):
         self.samplesy = []
         for x, y in list_seq:
             self.samplesx.append(np.array(x, dtype=np.float32))
-            y_as_hot_vector = []
-            for spec_y in y :
-                hot_vector = [0] * 20
-                hot_vector[spec_y] = 1
-                y_as_hot_vector.append(hot_vector)
-            self.samplesy.append(np.array(y_as_hot_vector, dtype=np.float32))
+            vector = torch.tensor([y])
+            self.samplesy.append(vector)
 
         self.samplesx = torch.tensor(self.samplesx)
-        self.samplesy = torch.tensor(self.samplesy)
 
     def __len__(self):
         return len(self.samplesx)
@@ -114,11 +109,12 @@ def main():
         list_place_to_key[i] = u_key
         x = users[u_key][:8]
         seq_only = [k[:26] for k in users[u_key][8:11]]
-        y = [int(k[VALUE_INDEX]) for k in users[u_key][8:11]]
+        y = int(users[u_key][10][VALUE_INDEX])
         padding_to_k(seq_only, 51 - 26)
         x.extend(seq_only)
         train_list.append((x, y))
     train_set = TrainingStopProblemDataset(np.array(train_list))
+
     train(model, train_set)
 
     print("k")
