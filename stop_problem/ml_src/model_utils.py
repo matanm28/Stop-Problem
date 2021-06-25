@@ -85,20 +85,9 @@ class TrainingStopProblemDataset(Dataset):
         return self.samplesx[idx], self.samplesy[idx]
 
 
-# class TestStopProblemDataset(Dataset):
-#     def __init__(self, list_seq):
-#         self.samplesx = list_seq
-#
-#     def __len__(self):
-#         return len(self.samplesx)
-#
-#     def __getitem__(self, idx):
-#         return np.array(self.samplesx[idx])
-
-
 def main():
     print("k")
-
+    x = get_data_for_all_players()
     with open('stop_problem\ml_src\data.json', 'r') as fp:
         users = json.load(fp)
     model = Net()
