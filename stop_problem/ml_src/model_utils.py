@@ -2,20 +2,16 @@ import json
 import os.path
 import random
 import warnings
-from typing import Optional, Tuple, List
+from typing import Optional, List
 
+import numpy as np
 import torch
-import torch.nn.functional as F
 from numpy import ndarray
 from torch import no_grad, Tensor, nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
-from stop_problem.ml_src.data_preperation import get_data_for_all_players, get_data_for_10_players
 from ..ml_src.model import Net
-import time
-
-import numpy as np
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 CHOSEN_VALUE_INDEX = 27
