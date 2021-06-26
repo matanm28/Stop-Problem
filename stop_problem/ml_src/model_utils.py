@@ -34,12 +34,12 @@ def train(model, train_set, epochs=30):
         correct = 0
         for batch_idx, (inputs, labels) in enumerate(train_loader):
             model.optimizer.zero_grad()
-            outputs = model(inputs)
+            yhats_list = model(inputs)
             losses = []
-            for output, label in zip(outputs, labels.transpose(0, 1)):
-                losses.append(criterion(output, label))
-                predictions = torch.argmax(output.data, dim=1)
-                correct += (predictions == label).sum().item()
+            for yhat, y_true in zip(yhats_list, labels.transpose(0, 1)):
+                losses.append(criterion(yhat, y_true))
+                predictions = torch.argmax(yhat.data, dim=1)
+                correct += (predictions == y_true).sum().item()
             total += labels.size().numel()
             loss = sum(losses)
             loss.backward()
@@ -61,10 +61,10 @@ def test(model, validation_data):
     with no_grad():
         for inputs, batch_ys in data_loader:
             yhats_tuple = model(inputs)
-            for yhats, ys in zip(yhats_tuple, batch_ys.transpose(0, 1)):
-                loss += criterion(yhats, ys).sum().item()
-                predictions = torch.argmax(yhats.data, 1)
-                correct += (predictions == ys).sum().item()
+            for yhat, y_true in zip(yhats_tuple, batch_ys.transpose(0, 1)):
+                loss += criterion(yhat, y_true).sum().item()
+                predictions = torch.argmax(yhat.data, 1)
+                correct += (predictions == y_true).sum().item()
             total += batch_ys.size().numel()
     accuracy = round(100 * correct / total, 2)
     avg_loss = round(loss / total, 2)
