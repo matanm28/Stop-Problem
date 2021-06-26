@@ -43,13 +43,35 @@ sequences_np_arr = np.array(sequences_flat_lists)
 
 
 def get_inputs_from_player(player: Player) -> ndarray:
+    """
+    returns a numpy array representing the data for a single player with shape (11,51).
+    data representation as follows:
+    [0]: Player meta-info:
+        [0] - age
+        [1-4] - gender as one-hot encoded vector
+        [4-50] - padding with -1 as null value
+    [1-10]:
+        [0-26]: Sequence related data:
+            [0-19] - sequence values
+            [20] - sequence optimal value
+            [21] - sequence optimal index
+            [22] - sequence worst value
+            [23] - sequence worst index
+            [24] - sequence median value
+            [25-26] - sequence median indices
+        [27-50]: Player answer data:
+            [27]: chosen value
+            [28]: chosen index
+            [29]: total time in seconds
+            [30-50]: time spent decoding weather to pick a value or pass (padded with -1 after 30 + <chosen index>)
+    """
     meta_info_vec = [player.age, *as_gender_one_hot(player.gender)]
     answers = []
     for answer in player.sequence_answers.all():
         chosen_value = answer.chosen_value
         answer_values_list = [chosen_value.value, chosen_value.index, int(answer.is_accepted),
                               answer.total_time_period.total_seconds()]
-        time_deltas = answer.answers.values_list(F('time_period__end') - F('time_period__start'), flat=True)
+        time_deltas = answer.answer_layers.values_list(F('time_period__end') - F('time_period__start'), flat=True)
         padding = [-1 for _ in range(time_deltas.count(), answer.sequence.values.count())]
         answer_values_list.extend([td.total_seconds() for td in time_deltas] + padding)
         answers.append(answer_values_list)
@@ -75,12 +97,11 @@ def get_data_for_10_players():
 
 
 def get_data_for_all_players():
-    return {player.id: get_inputs_from_player(player) for player in Player.objects.filter(is_done=True)}
+    return {str(player.id): get_inputs_from_player(player) for player in Player.objects.filter(is_done=True)}
 
 
 def main():
-    p = Player.objects.get(id='56835389-432d-403d-a15d-b4f86eed8a24')
-    a = get_inputs_from_player(p)
+    a = get_data_for_all_players()
     print(a)
 
 

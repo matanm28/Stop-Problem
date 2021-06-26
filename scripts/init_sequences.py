@@ -3,7 +3,7 @@ from stop_problem.models import Sequence, Value
 
 def init_sequences():
     import json
-    with open('conf/data.json', 'r') as f:
+    with open('datasets/experiment_data.json', 'r') as f:
         data = json.load(f)
 
     sequences = {int(key): item for key, item in data['Sequences'].items()}

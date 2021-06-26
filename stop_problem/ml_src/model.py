@@ -7,21 +7,25 @@ import torch.optim as optim
 
 class Net(nn.Module):
 
-    def __init__(self):
+    def __init__(self, num_of_predictions: int = 3):
+        assert 1 <= num_of_predictions <= 5
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(561, 256)
-        self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 60)
-        self.fc4 = nn.Linear(60, 20)
-
-
+        self.whole_sequences = nn.Sequential(
+            nn.Linear(561, 256),
+            nn.ReLU(),
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Linear(128, num_of_predictions * 20),
+            nn.ReLU(),
+        )
+        self.num_of_predictions = num_of_predictions
+        self.answer_layers = [nn.Sequential(
+            nn.Linear(20, 20), nn.ReLU(), nn.LogSoftmax(dim=1)
+        ) for _ in range(num_of_predictions)]
         self.optimizer = optim.Adam(self.parameters(), lr=0.001)
-        self.drop = nn.Dropout(0.25)
 
     def forward(self, x):
         x = x.view(-1, 561)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)
-        return F.log_softmax(x, -1)
+        x = self.whole_sequences(x)
+        answers = [self.answer_layers[k](x[:, k * 20:k * 20 + 20]) for k in range(self.num_of_predictions)]
+        return answers

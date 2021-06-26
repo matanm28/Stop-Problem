@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from stop_problem.ml_src.model_utils import main
+from stop_problem.ml_src.model_utils import train_test_and_save_model
 
 
 def Command():
@@ -12,4 +12,4 @@ class PrepareTrainingData(BaseCommand):
         super().__init__(stdout, stderr, no_color, force_color)
 
     def handle(self, *args, **options):
-        main()
+        train_test_and_save_model()
