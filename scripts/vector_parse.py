@@ -1,7 +1,7 @@
 import json
 import uuid
 
-LINE_LENGTH = 50
+LINE_LENGTH = 51
 SEQ_LENGTH = 20
 
 
@@ -45,6 +45,7 @@ def uniform_time(chosen_index, total_time):
     time_per_index = total_time / chosen_index
     time_list = [float(time_per_index)] * chosen_index
     time_list = padding_by_k(time_list, SEQ_LENGTH - chosen_index)
+    time_list.append(float(chosen_index))
     return time_list
 
 

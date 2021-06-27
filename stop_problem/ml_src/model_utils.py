@@ -145,7 +145,8 @@ class MinMaxNormalizer:
 def train_test_and_save_model():
     warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
     # x = get_data_for_all_players()
-    full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data.json')
+    #full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data.json')
+    full_data_path = os.path.join(os.path.curdir, 'datasets', 'experiment_data.json')
     lines_to_predict = 3
     model = Net(lines_to_predict)
     organized_data = parse_data_from_json(full_data_path, lines_to_predict)
