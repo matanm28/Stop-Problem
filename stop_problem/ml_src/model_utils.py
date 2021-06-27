@@ -155,8 +155,8 @@ def train_test_and_save_model():
     validation_set = TrainingStopProblemDataset(np.array(organized_data[train_size:len(organized_data)]))
     train_accuracy, train_loss = train(model, train_set)
     test_accuracy, test_loss = test(model, validation_set)
-    if test_accuracy >= 35:
-        model_path = os.path.join('saved_models', f'model_{train_accuracy}-{test_accuracy}.pt')
+    if test_accuracy >= 15:
+        model_path = os.path.join('saved_models', f'model_less_{train_accuracy}-{test_accuracy}.pt')
         torch.save(model, model_path)
 
 
