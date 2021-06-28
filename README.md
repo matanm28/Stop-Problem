@@ -1,1 +1,3 @@
-# Stop-Problem Final Project for Human-Agnet Interactions at BIU
+# Final Project for Human-Agnet Interactions at BIU
+
+See PDF for more details
