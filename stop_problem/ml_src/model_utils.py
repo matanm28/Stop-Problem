@@ -11,11 +11,12 @@ from torch import no_grad, Tensor, nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
-from ..ml_src.model import Net
+from ..ml_src.stop_problem_dnn import StopProblemDNN
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 CHOSEN_VALUE_INDEX = 27
 CHOSEN_INDEX_INDEX = 28
+VERBOSE = True
 
 
 def train(model, train_set, epochs=30):
@@ -43,7 +44,8 @@ def train(model, train_set, epochs=30):
             running_loss += loss.item()
         accuracy_list.append(round(100 * correct / total, 2))
         loss_list.append(round(running_loss / total, 2))
-        print(f'Epoch: {epoch + 1} loss: {loss_list[-1]} accuracy: {accuracy_list[-1]}%')
+        if VERBOSE:
+            print(f'Epoch: {epoch + 1} loss: {loss_list[-1]} accuracy: {accuracy_list[-1]}%')
     return accuracy_list[-1], loss_list[-1]
 
 
@@ -64,8 +66,9 @@ def test(model, validation_data):
             total += batch_ys.size().numel()
     accuracy = round(100 * correct / total, 2)
     avg_loss = round(loss / total, 2)
-    print(f'accuracy: {accuracy}%')
-    print(f'avg loss: {avg_loss}')
+    if VERBOSE:
+        print(f'accuracy: {accuracy}%')
+        print(f'avg loss: {avg_loss}')
     return accuracy, avg_loss
 
 
@@ -142,25 +145,7 @@ class MinMaxNormalizer:
         return x
 
 
-def train_test_and_save_model():
-    warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
-    # x = get_data_for_all_players()
-    #full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data.json')
-    full_data_path = os.path.join(os.path.curdir, 'datasets', 'experiment_data.json')
-    lines_to_predict = 3
-    model = Net(lines_to_predict)
-    organized_data = parse_data_from_json(full_data_path, lines_to_predict)
-    train_size = (len(organized_data) // 5) * 4
-    train_set = TrainingStopProblemDataset(np.array(organized_data[0:train_size]))
-    validation_set = TrainingStopProblemDataset(np.array(organized_data[train_size:len(organized_data)]))
-    train_accuracy, train_loss = train(model, train_set)
-    test_accuracy, test_loss = test(model, validation_set)
-    if test_accuracy >= 15:
-        model_path = os.path.join('saved_models', f'model_less_{train_accuracy}-{test_accuracy}.pt')
-        torch.save(model, model_path)
-
-
-def parse_data_from_json(json_path: str, lines_to_delete=3) -> List:
+def prepare_data_from_json(json_path: str, lines_to_delete=3) -> List:
     users = None
     with open(json_path, 'r') as fp:
         users = json.load(fp)
@@ -179,3 +164,21 @@ def parse_data_from_json(json_path: str, lines_to_delete=3) -> List:
                 x[i][j] = -1
         organized_data.append((x, y))
     return organized_data
+
+
+def train_test_and_save_model():
+    warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
+    # x = get_data_for_all_players()
+    # full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data_1st_iteration.json')
+    full_data_path = os.path.join(os.path.curdir, 'datasets', 'experiment_data.json')
+    lines_to_predict = 3
+    model = StopProblemDNN(lines_to_predict)
+    organized_data = prepare_data_from_json(full_data_path, lines_to_predict)
+    train_size = (len(organized_data) // 5) * 4
+    train_set = TrainingStopProblemDataset(np.array(organized_data[0:train_size]))
+    validation_set = TrainingStopProblemDataset(np.array(organized_data[train_size:len(organized_data)]))
+    train_accuracy, train_loss = train(model, train_set)
+    test_accuracy, test_loss = test(model, validation_set)
+    if test_accuracy >= 15:
+        model_path = os.path.join('saved_models', f'model_less_{train_accuracy}-{test_accuracy}.pt')
+        torch.save(model, model_path)

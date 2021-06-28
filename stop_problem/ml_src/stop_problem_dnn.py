@@ -2,11 +2,11 @@ import torch.optim as optim
 from torch import nn
 
 
-class Net(nn.Module):
+class StopProblemDNN(nn.Module):
 
     def __init__(self, num_of_predictions: int = 3):
         assert 1 <= num_of_predictions <= 5
-        super(Net, self).__init__()
+        super(StopProblemDNN, self).__init__()
         self.whole_sequences = nn.Sequential(
             nn.Linear(561, 256),
             nn.ReLU(),

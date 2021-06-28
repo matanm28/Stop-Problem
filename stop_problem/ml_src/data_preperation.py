@@ -71,7 +71,7 @@ def get_inputs_from_player(player: Player) -> ndarray:
         chosen_value = answer.chosen_value
         answer_values_list = [chosen_value.value, chosen_value.index, int(answer.is_accepted),
                               answer.total_time_period.total_seconds()]
-        time_deltas = answer.answer_layers.values_list(F('time_period__end') - F('time_period__start'), flat=True)
+        time_deltas = answer.answers.values_list(F('time_period__end') - F('time_period__start'), flat=True)
         padding = [-1 for _ in range(time_deltas.count(), answer.sequence.values.count())]
         answer_values_list.extend([td.total_seconds() for td in time_deltas] + padding)
         answers.append(answer_values_list)
@@ -102,6 +102,7 @@ def get_data_for_all_players():
 
 def main():
     a = get_data_for_all_players()
+
     print(a)
 
 
