@@ -145,7 +145,8 @@ class MinMaxNormalizer:
 def train_test_and_save_model():
     warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
     # x = get_data_for_all_players()
-    full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data.json')
+    #full_data_path = os.path.join(os.path.curdir, 'datasets', 'site_data.json')
+    full_data_path = os.path.join(os.path.curdir, 'datasets', 'experiment_data.json')
     lines_to_predict = 3
     model = Net(lines_to_predict)
     organized_data = parse_data_from_json(full_data_path, lines_to_predict)
@@ -154,8 +155,8 @@ def train_test_and_save_model():
     validation_set = TrainingStopProblemDataset(np.array(organized_data[train_size:len(organized_data)]))
     train_accuracy, train_loss = train(model, train_set)
     test_accuracy, test_loss = test(model, validation_set)
-    if test_accuracy >= 35:
-        model_path = os.path.join('saved_models', f'model_{train_accuracy}-{test_accuracy}.pt')
+    if test_accuracy >= 15:
+        model_path = os.path.join('saved_models', f'model_less_{train_accuracy}-{test_accuracy}.pt')
         torch.save(model, model_path)
 
 
