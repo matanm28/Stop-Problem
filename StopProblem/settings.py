@@ -6,6 +6,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import json
 import os
 from pathlib import Path
 
@@ -75,15 +76,19 @@ WSGI_APPLICATION = 'StopProblem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+db_data_file_name = 'tmp/db_data.json'
+if os.path.exists(db_data_file_name):
+    with open(db_data_file_name, 'r') as json_file:
+        db_data = json.load(json_file)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dfnnu10q8dgl74',
-        'HOST': 'ec2-54-216-17-9.eu-west-1.compute.amazonaws.com',
-        'PORT': 5432,
-        'USER':'klhvlmifthowwk',
-        'PASSWORD':'3b84b81a1cc72cee1b156d46cf8d46c76bcd701ca6978c6dccec3149d3504527',
+        'NAME': db_data['NAME'],
+        'USER': db_data['USER'],
+        'PASSWORD': db_data['PASSWORD'],
+        'HOST': db_data['HOST'],
+        'PORT': db_data['PORT'],
 
     }
 }
