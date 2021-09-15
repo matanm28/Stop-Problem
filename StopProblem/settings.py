@@ -76,24 +76,12 @@ WSGI_APPLICATION = 'StopProblem.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-db_data_file_name = 'tmp/db_data.json'
-if os.path.exists(db_data_file_name):
-    with open(db_data_file_name, 'r') as json_file:
-        db_data = json.load(json_file)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3',
     },
-    'default1': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': db_data['NAME'],
-        'USER': db_data['USER'],
-        'PASSWORD': db_data['PASSWORD'],
-        'HOST': db_data['HOST'],
-        'PORT': db_data['PORT'],
-    }
 }
 
 # Password validation
