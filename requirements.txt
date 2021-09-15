@@ -15,7 +15,7 @@ ipython-genutils==0.2.0
 jedi==0.18.0
 joblib==1.0.1
 matplotlib-inline==0.1.2
-numpy
+numpy~=1.20.3
 pandas==1.2.5
 parso==0.8.2
 pickleshare==0.7.5
@@ -32,10 +32,12 @@ six==1.16.0
 soupsieve==2.2.1
 sqlparse==0.4.1
 threadpoolctl==2.1.0
-torch
+torch~=1.9.0
 torchaudio
-torchvision
+torchvision~=0.10.0
 traitlets
 typing-extensions==3.10.0.0
 wcwidth==0.2.5
 whitenoise==5.2.0
+
+matplotlib~=3.4.3

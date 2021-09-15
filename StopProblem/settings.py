@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['https://stop-problem.herokuapp.com/',
                  'http://stop-problem.herokuapp.com/',
                  'stop-problem.herokuapp.com/',
                  'stop-problem.herokuapp.com',
-                 '127.0.0.1']
+                 '127.0.0.1','localhost']
 
 # Application definition
 
@@ -83,13 +83,16 @@ if os.path.exists(db_data_file_name):
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+    },
+    'default1': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': db_data['NAME'],
         'USER': db_data['USER'],
         'PASSWORD': db_data['PASSWORD'],
         'HOST': db_data['HOST'],
         'PORT': db_data['PORT'],
-
     }
 }
 
